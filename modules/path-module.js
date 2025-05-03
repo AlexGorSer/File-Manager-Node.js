@@ -1,15 +1,22 @@
-const currentPath = path.dirname(import.meta.dirname);
+import path from "node:path";
+import { EOL } from "node:os";
+import { stdout } from "node:process";
 
-const changePathUP = async (currentPath) => {
-  return path.resolve(currentPath, "../");
+let currentPath = path.dirname(process.cwd());
+
+const changePathUP = async () => {
+ currentPath = path.resolve(currentPath, "../");
 };
 
-const newPath = async (path) => {
-  return path.join(currentPath, as);
+const newPath = async (input) => {
+  currentPath = path.join(currentPath, input);
 };
 
-const listCommand = async () => {
+const directoryList = async () => {
   console.log("list");
 };
 
-export { changePathUP, newPath, listCommand };
+const getCurrentPath = async () => {
+  stdout.write(`You are currently in ${currentPath}${EOL}`);
+}
+export { changePathUP, newPath, directoryList, getCurrentPath };
