@@ -8,8 +8,9 @@ import {
   renameFile,
 } from "./file-module.js";
 import { calcHash } from "./hash-module.js";
-import { changePathUP, directoryList, newPath } from "./path-module.js";
+import { changePathUP, directoryList, changePath } from "./path-module.js";
 import { compressFile, decompressFile } from "./zlib-module.js";
+import { EOL } from "node:os";
 
 const getStartName = () => {
   const startArguments = process.argv.slice(2);
@@ -21,6 +22,11 @@ const getStartName = () => {
 
 const welcomeMessage = `Welcome to the File Manager, ${getStartName()}!`;
 const exitMessage = `Thank you for using File Manager, ${getStartName()}, goodbye!`;
+
+const exitCommand = async () => {
+  process.stdout.write(exitMessage + EOL);
+  process.exit();
+}
 
 const objectOptions = {
   cat: readFile,
@@ -35,18 +41,26 @@ const objectOptions = {
   decompress: decompressFile,
   up: changePathUP,
   ls: directoryList,
-  cd: newPath,
+  cd: changePath,
+  ['.exit']:exitCommand,
 };
 
 const getCommand = async (input) => {
   const arrCommands = input.toString().trim().split(" ");
 
   if (objectOptions.hasOwnProperty(arrCommands[0])) {
-    // console.log(argument)
-    await objectOptions[arrCommands[0]](arrCommands[1]);
+    try {
+      await objectOptions[arrCommands[0]](arrCommands[1]);
+    } catch (error) {
+      console.error('Operation failed \n');
+      console.log(error);
+    }
+    
   } else {
-    console.log("Invalid input");
+    console.log("Invalid input \n");
   }
 };
 
-export { welcomeMessage, exitMessage, getCommand };
+
+
+export { welcomeMessage, exitMessage, getCommand,exitCommand };
