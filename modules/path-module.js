@@ -24,23 +24,22 @@ const directoryList = async () => {
   for (let index = 0; index < arrFiles.length; index++) {
     const pathToCheck = path.join(currentPath, arrFiles[index]);
     const fileCheck = await fs.promises.stat(pathToCheck);
-    const objectToPush = {}
-    
+    const objectToPush = {};
+
     objectToPush.Name = arrFiles[index];
-    if(fileCheck.isFile()) {
-      objectToPush.Type = 'file';
+    if (fileCheck.isFile()) {
+      objectToPush.Type = "file";
     } else {
-      objectToPush.Type = 'directory';
+      objectToPush.Type = "directory";
     }
 
     table.push(objectToPush);
   }
-  console.table(table.sort((a)=>{
-   return  a.Type === 'file' ? 1 : -1;
-  }))
-
-  
-
+  console.table(
+    table.sort((a) => {
+      return a.Type === "file" ? 1 : -1;
+    })
+  );
 };
 
 const getCurrentPath = async () => {

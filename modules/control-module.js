@@ -8,6 +8,7 @@ import {
   renameFile,
 } from "./file-module.js";
 import { calcHash } from "./hash-module.js";
+import { osController } from "./os-module.js";
 import { changePathUP, directoryList, changePath } from "./path-module.js";
 import { compressFile, decompressFile } from "./zlib-module.js";
 import { EOL } from "node:os";
@@ -43,6 +44,7 @@ const objectOptions = {
   ls: directoryList,
   cd: changePath,
   ".exit": exitCommand,
+  os: osController
 };
 
 const getCommand = async (input) => {

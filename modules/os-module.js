@@ -1,21 +1,48 @@
+import { arch, cpus, EOL, homedir, hostname } from "node:os";
+
+const osController = async ([command]) => {
+  if (osOptions.hasOwnProperty(command)) {
+    try {
+      await osOptions[command](command);
+    } catch (error) {
+      console.error("Operation failed \n");
+      console.log(error);
+    }
+  } else {
+    console.log("Invalid input \n");
+  }
+};
+
 const osEOL = async () => {
-  console.log("EOL");
+  process.stdout.write(JSON.stringify(EOL) + EOL);
 };
 
 const osCPUS = async () => {
-  console.log("cpus");
+  const cpuObj = cpus();
+  process.stdout.write(`count CPU: ${cpuObj.length}` + EOL);
+  cpuObj.forEach((element) => {
+    process.stdout.write(`model: ${element.model}` + EOL);
+    process.stdout.write(`clock rate: ${element.speed / 1000}` + EOL);
+  });
 };
 
 const osHomeDir = async () => {
-  console.log("homedir");
+  process.stdout.write(homedir() + EOL);
 };
 
 const osSystemName = async () => {
-  console.log("system name");
+  process.stdout.write(hostname() + EOL);
 };
 
 const osArchitecture = async () => {
-  console.log("Arch");
+  process.stdout.write(arch() + EOL);
 };
 
-export { osArchitecture, osCPUS, osHomeDir, osSystemName, osEOL };
+const osOptions = {
+  "--EOL": osEOL,
+  "--cpus": osCPUS,
+  "--homedir": osHomeDir,
+  "--username": osSystemName,
+  "--architecture": osArchitecture,
+};
+export { osArchitecture, osCPUS, osHomeDir, osSystemName, osEOL, osController };
