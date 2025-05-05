@@ -8,13 +8,16 @@ const readFile = async (pathToRead) => {
 
   await fs.promises.access(readPath);
 
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     const readStream = fs.createReadStream(readPath, { encoding: "utf8" });
 
     readStream.on("data", (data) => {
       process.stdout.write(data + "\n\n");
       resolve();
     });
+    readStream.on('error', ()=> {
+      reject()
+    })
   });
 };
 

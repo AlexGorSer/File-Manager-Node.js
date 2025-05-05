@@ -12,6 +12,7 @@ import { osController } from "./os-module.js";
 import { changePathUP, directoryList, changePath } from "./path-module.js";
 import { compressFile, decompressFile } from "./zlib-module.js";
 import { EOL } from "node:os";
+import { operationFailedErr, invalidInputErr } from "./error-module.js";
 
 const getStartName = () => {
   const startArguments = process.argv.slice(2);
@@ -44,21 +45,23 @@ const objectOptions = {
   ls: directoryList,
   cd: changePath,
   ".exit": exitCommand,
-  os: osController
+  os: osController,
 };
 
 const getCommand = async (input) => {
-  const [command, ...arg] = input.toString().trim().split(" ");
+  const [command, ...arg] = input
+    .toString()
+    .split(/["']([^"']+)["']|(\S+)/g)
+    .filter((val) => !!val && !!val.trim());
 
   if (objectOptions.hasOwnProperty(command)) {
     try {
       await objectOptions[command](arg);
     } catch (error) {
-      process.stdout.write("Operation failed \n");
-      
+      await operationFailedErr();
     }
   } else {
-   process.stdout.write("Invalid input \n");
+    await invalidInputErr();
   }
 };
 

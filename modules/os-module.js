@@ -1,15 +1,16 @@
 import { arch, cpus, EOL, homedir, hostname } from "node:os";
+import { operationFailedErr, invalidInputErr } from "./error-module.js";
 
 const osController = async ([command]) => {
   if (osOptions.hasOwnProperty(command)) {
     try {
       await osOptions[command](command);
     } catch (error) {
-      process.stdout.write("Operation failed \n");
+      await operationFailedErr();
       
     }
   } else {
-    process.stdout.write("Invalid input \n");
+    await invalidInputErr();
   }
 };
 
