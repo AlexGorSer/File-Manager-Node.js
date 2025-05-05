@@ -23,19 +23,20 @@ const readFile = async (pathToRead) => {
 
 const addFile = async (filename) => {
   const readPath = path.join(currentPath, ...filename);
-
+  
   await fs.promises.appendFile(readPath, "", { flag: "wx" });
 };
 
 const mkdirFile = async (foldername) => {
   const folderPath = path.join(currentPath, ...foldername);
-
+  
   await fs.promises.mkdir(folderPath);
 };
 
 const renameFile = async ([pathToFile, newName]) => {
   const folderPath = path.resolve(currentPath, pathToFile);
   const pathToRename = path.resolve(path.dirname(folderPath), newName);
+  await fs.promises.access(folderPath);
 
   await fs.promises.rename(folderPath, pathToRename);
 };
@@ -44,6 +45,8 @@ const copyFile = async ([pathToFile, pathToCopy]) => {
   const folderPath = path.resolve(currentPath, pathToFile);
   const { base } = path.parse(folderPath);
   const copyPath = path.resolve(pathToCopy);
+
+  await fs.promises.access(folderPath);
 
   const readStream = fs.createReadStream(folderPath);
   const writeStream = fs.createWriteStream(path.join(copyPath, base));
@@ -56,6 +59,8 @@ const moveFile = async ([pathToFile, PathToMove]) => {
   const { base } = path.parse(folderPath);
   const movePath = path.resolve(PathToMove);
 
+  await fs.promises.access(folderPath);
+  
   const readStream = fs.createReadStream(folderPath);
   const writeStream = fs.createWriteStream(path.join(movePath, base));
 
@@ -66,6 +71,8 @@ const moveFile = async ([pathToFile, PathToMove]) => {
 
 const deleteFile = async ([pathToDelete]) => {
   const deletePath = path.resolve(currentPath, pathToDelete);
+  await fs.promises.access(deletePath);
+
   await fs.promises.unlink(deletePath);
 };
 
