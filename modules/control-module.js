@@ -54,11 +54,11 @@ const getCommand = async (input) => {
     try {
       await objectOptions[command](arg);
     } catch (error) {
-      console.error("Operation failed \n");
-      console.log(error);
+      process.stdout.write("Operation failed \n");
+      
     }
   } else {
-    console.log("Invalid input \n");
+   process.stdout.write("Invalid input \n");
   }
 };
 

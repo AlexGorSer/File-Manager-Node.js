@@ -1,17 +1,22 @@
 import path from "node:path";
-import { EOL } from "node:os";
+import { EOL, homedir } from "node:os";
 import fs from "fs";
 import { stdout } from "node:process";
 
-let currentPath = process.cwd();
+const homePath = homedir();
+let currentPath = homePath;
+process.chdir(homePath);
+
 
 const changePathUP = async () => {
+  if(currentPath === homePath) return;
   currentPath = path.resolve(currentPath, "../");
   process.chdir(currentPath);
 };
 
 const changePath = async (input) => {
   const newPath = path.resolve(...input);
+
   await fs.promises.access(newPath);
   currentPath = newPath;
   process.chdir(newPath);
@@ -36,7 +41,10 @@ const directoryList = async () => {
     table.push(objectToPush);
   }
   console.table(
-    table.sort((a) => {
+    table.sort((a,b) => {
+      if(a.Type === b.Type) {
+        return a.Name.localeCompare(b.Name);
+      }
       return a.Type === "file" ? 1 : -1;
     })
   );

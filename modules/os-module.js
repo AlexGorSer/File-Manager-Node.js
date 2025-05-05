@@ -5,11 +5,11 @@ const osController = async ([command]) => {
     try {
       await osOptions[command](command);
     } catch (error) {
-      console.error("Operation failed \n");
-      console.log(error);
+      process.stdout.write("Operation failed \n");
+      
     }
   } else {
-    console.log("Invalid input \n");
+    process.stdout.write("Invalid input \n");
   }
 };
 
