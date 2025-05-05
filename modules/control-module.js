@@ -26,7 +26,7 @@ const exitMessage = `Thank you for using File Manager, ${getStartName()}, goodby
 const exitCommand = async () => {
   process.stdout.write(exitMessage + EOL);
   process.exit();
-}
+};
 
 const objectOptions = {
   cat: readFile,
@@ -42,25 +42,22 @@ const objectOptions = {
   up: changePathUP,
   ls: directoryList,
   cd: changePath,
-  ['.exit']:exitCommand,
+  ".exit": exitCommand,
 };
 
 const getCommand = async (input) => {
-  const arrCommands = input.toString().trim().split(" ");
+  const [command, ...arg] = input.toString().trim().split(" ");
 
-  if (objectOptions.hasOwnProperty(arrCommands[0])) {
+  if (objectOptions.hasOwnProperty(command)) {
     try {
-      await objectOptions[arrCommands[0]](arrCommands[1]);
+      await objectOptions[command](arg);
     } catch (error) {
-      console.error('Operation failed \n');
+      console.error("Operation failed \n");
       console.log(error);
     }
-    
   } else {
     console.log("Invalid input \n");
   }
 };
 
-
-
-export { welcomeMessage, exitMessage, getCommand,exitCommand };
+export { welcomeMessage, exitMessage, getCommand, exitCommand };
